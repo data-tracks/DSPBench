@@ -2,7 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,scala,java,intellij,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,scala,java,intellij,gradle
 
-output
+output/
 
 ### Eclipse ###
 .metadata
