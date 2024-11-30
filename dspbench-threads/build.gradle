@@ -21,8 +21,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.slf4j:slf4j-api:2.0.9' // Ensure the version matches your requirements
+    implementation 'org.slf4j:slf4j-simple:2.0.9' // For a simple implementation, or choose another binding
+
     implementation 'ch.qos.logback:logback-classic:1.2.10'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
+    //implementation 'org.slf4j:slf4j-api:1.7.32'
     //implementation 'ch.qos.logback:logback-classic:1.2.10'
     implementation 'joda-time:joda-time:2.10.12'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
