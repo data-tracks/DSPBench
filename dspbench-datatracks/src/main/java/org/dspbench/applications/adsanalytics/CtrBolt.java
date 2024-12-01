@@ -16,7 +16,7 @@ public class CtrBolt extends BaseOperator {
 
     @Override
     protected void initialize() {
-        summaries = new HashMap<String, Summary>();
+        summaries = new HashMap<>();
     }
 
     @Override

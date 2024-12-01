@@ -1,5 +1,6 @@
 package org.dspbench.topology;
 
+import lombok.Setter;
 import org.dspbench.core.Operator;
 import org.dspbench.core.Source;
 import org.dspbench.core.Stream;
@@ -19,6 +20,7 @@ public class TopologyBuilder {
     private static final Logger LOG = LoggerFactory.getLogger(TopologyBuilder.class);
     
     private Topology topology;
+    @Setter
     private ComponentFactory factory;
 
     public void initTopology(String name) {
@@ -32,7 +34,7 @@ public class TopologyBuilder {
 
     public Stream createStream(String name, Schema schema) {
         LOG.info("Creating stream '{}' with {}", name, schema.toString());
-        Stream stream = (Stream) factory.createStream(name, schema);
+        Stream stream = factory.createStream(name, schema);
         topology.addStream(name, stream);
         
         return stream;
@@ -136,7 +138,4 @@ public class TopologyBuilder {
             ((IOperatorAdapter)adapter).setTimeInterval(interval, timeUnit);
     }
 
-    public void setFactory(ComponentFactory factory) {
-        this.factory = factory;
-    }
 }

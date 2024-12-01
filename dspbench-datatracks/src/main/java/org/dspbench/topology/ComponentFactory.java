@@ -11,11 +11,11 @@ import org.dspbench.utils.Configuration;
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
  */
 public interface ComponentFactory {
-    public Stream createStream(String name, Schema schema);
-    public IOperatorAdapter createOperatorAdapter(String name, Operator operator);
-    public ISourceAdapter createSourceAdapter(String name, Source source);
-    public Topology createTopology(String name);
+    Stream createStream( String name, Schema schema );
+    IOperatorAdapter createOperatorAdapter( String name, Operator operator );
+    ISourceAdapter createSourceAdapter( String name, Source source );
+    Topology createTopology( String name );
     
     //public void setMetrics(MetricRegistry metrics);
-    public void setConfiguration(Configuration configuration);
+    void setConfiguration( Configuration configuration );
 }

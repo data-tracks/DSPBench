@@ -55,10 +55,6 @@ public class MachineOutlierTask extends BasicTask {
         builder.shuffle(Component.SINK, alerts);
     }
 
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
 
     @Override
     public String getConfigPrefix() {

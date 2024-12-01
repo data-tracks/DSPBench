@@ -52,10 +52,6 @@ public class BargainIndexTask extends BasicTask {
         builder.groupByKey(Component.SINK, bargains);
     }
 
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
 
     @Override
     public String getConfigPrefix() {

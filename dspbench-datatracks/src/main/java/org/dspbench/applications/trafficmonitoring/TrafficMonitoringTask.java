@@ -50,11 +50,7 @@ public class TrafficMonitoringTask extends BasicTask {
         builder.setOperator(TrafficMonitoringConstants.Component.SINK, sink, sinkThreads);
         builder.shuffle(TrafficMonitoringConstants.Component.SINK, speeds);
     }
-    
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
+
 
     @Override
     public String getConfigPrefix() {

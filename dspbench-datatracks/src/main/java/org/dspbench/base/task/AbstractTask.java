@@ -1,5 +1,6 @@
 package org.dspbench.base.task;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dspbench.base.constants.BaseConstants.BaseConfig;
 import org.dspbench.base.sink.BaseSink;
 import org.dspbench.base.source.BaseSource;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
  *
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
  */
+@Slf4j
 public abstract class AbstractTask implements Task {
     protected TopologyBuilder builder;
     protected Configuration config;
@@ -40,7 +42,7 @@ public abstract class AbstractTask implements Task {
     
     protected BaseSource loadSource(String configKey, String configPrefix) {
         String sourceClass = config.getString(String.format(configKey, configPrefix));
-        BaseSource source = (BaseSource) ClassLoaderUtils.newInstance(sourceClass, "source", getLogger());
+        BaseSource source = (BaseSource) ClassLoaderUtils.newInstance(sourceClass, "source", log);
         source.setConfigPrefix(configPrefix);
         
         return source;
@@ -56,7 +58,7 @@ public abstract class AbstractTask implements Task {
     
     protected BaseSink loadSink(String configKey, String configPrefix) {
         String sinkClass = config.getString(String.format(configKey, configPrefix));
-        BaseSink sink = (BaseSink) ClassLoaderUtils.newInstance(sinkClass, "sink", getLogger());
+        BaseSink sink = (BaseSink) ClassLoaderUtils.newInstance(sinkClass, "sink", log);
         sink.setConfigPrefix(configPrefix);
         
         return sink;
@@ -81,7 +83,6 @@ public abstract class AbstractTask implements Task {
     protected String getConfigKey(String key) {
         return String.format(key, getConfigPrefix());
     }
-    
-    public abstract Logger getLogger();
+
     public abstract String getConfigPrefix();
 }

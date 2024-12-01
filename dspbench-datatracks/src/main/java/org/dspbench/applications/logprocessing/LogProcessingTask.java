@@ -100,11 +100,6 @@ public class LogProcessingTask extends AbstractTask {
     }
 
     @Override
-    public Logger getLogger() {
-        return LOG;
-    }
-
-    @Override
     public String getConfigPrefix() {
         return PREFIX;
     }

@@ -1,5 +1,8 @@
 package org.dspbench.core;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.dspbench.core.hook.Hook;
 import org.dspbench.utils.Configuration;
 import java.io.Serializable;
@@ -7,19 +10,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
  */
+@Slf4j
 public class Component implements Serializable {
-    private static final Logger LOG = LoggerFactory.getLogger(Component.class);
     
+    @Getter
+    @Setter
     protected int id;
+    @Getter
+    @Setter
     protected String name;
+    @Getter
+    @Setter
     protected int parallelism;
+    @Getter
+    @Setter
     protected Map<String, Stream> outputStreams;
     protected Configuration config;
     
@@ -27,17 +36,17 @@ public class Component implements Serializable {
     protected List<Hook> lowHooks;
 
     public Component() {
-        outputStreams = new HashMap<String, Stream>();
+        outputStreams = new HashMap<>();
         
-        highHooks = new ArrayList<Hook>();
-        lowHooks  = new ArrayList<Hook>();
+        highHooks = new ArrayList<>();
+        lowHooks  = new ArrayList<>();
     }
 
     public void onCreate(int id, Configuration config) {
         this.id     = id;
         this.config = config;
         
-        LOG.info("started component: class={}, name={}, id={}", this.getClass().getSimpleName(), name, id);
+        log.info("started component: class={}, name={}, id={}", this.getClass().getSimpleName(), name, id);
     }
 
     public void onDestroy() { }
@@ -67,7 +76,7 @@ public class Component implements Serializable {
             }
             
         } else {
-            LOG.error("Stream {} not found at component {}, valid streams: {}.", stream, getFullName(), outputStreams.toString());
+            log.error("Stream {} not found at component {}, valid streams: {}.", stream, getFullName(), outputStreams.toString());
         }
     }
     
@@ -84,11 +93,8 @@ public class Component implements Serializable {
             outputStreams.put(Constants.DEFAULT_STREAM, stream);
         }
     }
-    
-    public Map<String, Stream> getOutputStreams() {
-        return outputStreams;
-    }
-    
+
+
     public Stream getDefaultOutputStream() {
         if (outputStreams.containsKey(Constants.DEFAULT_STREAM))
             return outputStreams.get(Constants.DEFAULT_STREAM);
@@ -97,12 +103,8 @@ public class Component implements Serializable {
         else
             return null;
     }
-    
-    public void setOutputStreams(Map<String, Stream> outputStreams) {
-        this.outputStreams = outputStreams;
-    }
-    
-    
+
+
     // Hooks -------------------------------------------------------------------
     public void addHook(Hook hook) {
         if (hook.isHighPriority())
@@ -149,13 +151,13 @@ public class Component implements Serializable {
     }
     
     public void resetHooks() {
-        highHooks = new ArrayList<Hook>();
-        lowHooks  = new ArrayList<Hook>();
+        highHooks = new ArrayList<>();
+        lowHooks  = new ArrayList<>();
     }
     
     // Accessors ---------------------------------------------------------------
     public List<Hook> getHooks() {
-        List<Hook> hooks = new ArrayList<Hook>();
+        List<Hook> hooks = new ArrayList<>();
         hooks.addAll(highHooks);
         hooks.addAll(lowHooks);
         return hooks;
@@ -166,30 +168,7 @@ public class Component implements Serializable {
         addHooks(hooks);
     }
 
-    public void setParallelism(int parallelism) {
-        this.parallelism = parallelism;
-    }
 
-    public int getParallelism() {
-        return parallelism;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    
-    public int getId() {
-        return id;
-    }
-    
     public String getFullName() {
         return String.format("%s-%d", name, id);
     }
@@ -199,10 +178,8 @@ public class Component implements Serializable {
     public Component newInstance() {
         try {
             return getClass().newInstance();
-        } catch (InstantiationException ex) {
-            LOG.error("Error while copying object", ex);
-        } catch (IllegalAccessException ex) {
-            LOG.error("Error while copying object", ex);
+        } catch ( InstantiationException | IllegalAccessException ex) {
+            log.error("Error while copying object", ex);
         }
         return null;
     }
@@ -214,8 +191,8 @@ public class Component implements Serializable {
             newInstance.setName(name);
             newInstance.setParallelism(parallelism);
             newInstance.outputStreams = outputStreams;
-            newInstance.highHooks = new ArrayList<Hook>(highHooks);
-            newInstance.lowHooks = new ArrayList<Hook>(lowHooks);
+            newInstance.highHooks = new ArrayList<>( highHooks );
+            newInstance.lowHooks = new ArrayList<>( lowHooks );
         }
         
         return newInstance;

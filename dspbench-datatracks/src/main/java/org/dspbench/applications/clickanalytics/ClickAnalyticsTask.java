@@ -83,11 +83,6 @@ public class ClickAnalyticsTask extends AbstractTask {
     }
 
     @Override
-    public Logger getLogger() {
-        return LOG;
-    }
-
-    @Override
     public String getConfigPrefix() {
         return ClickAnalyticsConstants.PREFIX;
     }

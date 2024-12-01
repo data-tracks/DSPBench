@@ -22,7 +22,6 @@ public class RedisSource extends BaseSource {
     private static final Logger LOG = LoggerFactory.getLogger(RedisSource.class);
     
     private LinkedBlockingQueue<String> queue;
-    private JedisPool pool;
     private Parser parser;
    
     @Override
@@ -37,9 +36,9 @@ public class RedisSource extends BaseSource {
         parser.initialize(config);
         
         queue = new LinkedBlockingQueue<String>(queueSize);
-        pool  = new JedisPool(new JedisPoolConfig(), host, port);
+        JedisPool pool = new JedisPool( new JedisPoolConfig(), host, port );
 
-        ListenerThread listener = new ListenerThread(queue, pool, pattern);
+        ListenerThread listener = new ListenerThread( queue, pool, pattern );
         listener.start();
     }
 
@@ -65,10 +64,10 @@ public class RedisSource extends BaseSource {
         return true;
     }
     
-    private class ListenerThread extends Thread {
-        private LinkedBlockingQueue<String> queue;
-        private JedisPool pool;
-        private String pattern;
+    private static class ListenerThread extends Thread {
+        private final LinkedBlockingQueue<String> queue;
+        private final JedisPool pool;
+        private final String pattern;
 
         public ListenerThread(LinkedBlockingQueue<String> queue, JedisPool pool, String pattern) {
             this.queue = queue;
@@ -81,15 +80,15 @@ public class RedisSource extends BaseSource {
             Jedis jedis = pool.getResource();
             
             try {
-                jedis.psubscribe(new JedisListener(queue), pattern);
+                jedis.psubscribe( new JedisListener( queue ), pattern);
             } finally {
                 pool.returnResource(jedis);
             }
         }
     }
     
-    private class JedisListener extends JedisPubSub {
-        private LinkedBlockingQueue<String> queue;
+    private static class JedisListener extends JedisPubSub {
+        private final LinkedBlockingQueue<String> queue;
 
         public JedisListener(LinkedBlockingQueue<String> queue) {
             this.queue = queue;

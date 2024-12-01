@@ -51,11 +51,7 @@ public class AdsAnalyticsTask extends BasicTask {
         builder.setOperator(AdsAnalyticsConstants.Component.SINK, sink, sinkThreads);
         builder.shuffle(AdsAnalyticsConstants.Component.SINK, ctrs);
     }
-    
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
+
 
     @Override
     public String getConfigPrefix() {

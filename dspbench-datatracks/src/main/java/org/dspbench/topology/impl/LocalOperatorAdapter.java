@@ -1,6 +1,8 @@
 package org.dspbench.topology.impl;
 
 import com.codahale.metrics.MetricRegistry;
+import lombok.Getter;
+import lombok.Setter;
 import org.dspbench.core.Operator;
 import org.dspbench.core.Tuple;
 import org.dspbench.core.hook.Hook;
@@ -20,12 +22,14 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalOperatorAdapter implements IOperatorAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(LocalOperatorAdapter.class);
+    @Setter
     private MetricRegistry metrics;
     private Configuration config;
     
     private Operator operator;
+    @Getter
     private List<LocalOperatorInstance> instances;
-    private List<Hook> hooks = new ArrayList<Hook>();
+    private final List<Hook> hooks = new ArrayList<Hook>();
     private long timerInMillis = 0L;
     
     public void setComponent(Operator operator) {
@@ -58,7 +62,7 @@ public class LocalOperatorAdapter implements IOperatorAdapter {
     }
     
     public void setupInstances() {
-        instances = new ArrayList<LocalOperatorInstance>();
+        instances = new ArrayList<>();
         
         for (int p=0; p<operator.getParallelism(); p++) {
             Operator component = (Operator) operator.copy();
@@ -78,14 +82,7 @@ public class LocalOperatorAdapter implements IOperatorAdapter {
             instances.add(p, instance);
         }
     }
-    
-    public List<LocalOperatorInstance> getInstances() {
-        return instances;
-    }
 
-    public void setMetrics(MetricRegistry metrics) {
-        this.metrics = metrics;
-    }
 
     public void addComponentHook(Hook hook) {
         hooks.add(hook);

@@ -1,6 +1,7 @@
 package org.dspbench.topology.impl;
 
 import com.codahale.metrics.MetricRegistry;
+import lombok.Setter;
 import org.dspbench.core.Operator;
 import org.dspbench.core.Source;
 import org.dspbench.core.Stream;
@@ -16,17 +17,11 @@ import org.dspbench.utils.Configuration;
  *
  * @author mayconbordin
  */
+@Setter
 public class LocalComponentFactory implements ComponentFactory {
     private MetricRegistry metrics;
     private Configuration configuration;
 
-    public void setMetrics(MetricRegistry metrics) {
-        this.metrics = metrics;
-    }
-
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
 
     public Stream createStream(String name, Schema schema) {
         return new LocalStream(name, schema);

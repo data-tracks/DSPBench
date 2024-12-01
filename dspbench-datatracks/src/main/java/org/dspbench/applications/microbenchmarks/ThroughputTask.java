@@ -31,10 +31,6 @@ public class ThroughputTask extends BasicTask {
         builder.shuffle(Component.SINK, data);
     }
 
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
 
     @Override
     public String getConfigPrefix() {

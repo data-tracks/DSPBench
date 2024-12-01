@@ -48,11 +48,6 @@ public class SpikeDetectionTask extends BasicTask {
     }
 
     @Override
-    public Logger getLogger() {
-        return LOG;
-    }
-
-    @Override
     public String getConfigPrefix() {
         return SpikeDetectionConstants.PREFIX;
     }

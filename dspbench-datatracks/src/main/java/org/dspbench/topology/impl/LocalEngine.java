@@ -22,7 +22,7 @@ public class LocalEngine {
     private static LocalEngine engine;
     
     private LocalTopology topology;
-    private List<ExecutorService> threadPool = new ArrayList<ExecutorService>();
+    private final List<ExecutorService> threadPool = new ArrayList<>();
     
     private LocalEngine() {}
     

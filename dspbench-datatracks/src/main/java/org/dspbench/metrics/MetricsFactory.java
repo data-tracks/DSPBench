@@ -89,21 +89,26 @@ public class MetricsFactory {
     
     public static List<Hook> createMetricHooks(Component component, MetricRegistry metrics, String name) {
         String[] metricList = config.getString(METRICS_ENABLED_METRICS).split(",");
-        List<Hook> hooks = new ArrayList<Hook>(metricList.length);
+        List<Hook> hooks = new ArrayList<>( metricList.length );
         
         for (String metric : metricList) {
-            if (metric.equals(Constants.METRIC_PROCESS_TIME)) {
-                hooks.add(createProcessTimeHook(metrics, name));
-            } else if (metric.equals(Constants.METRIC_THROUGHPUT)) {
-                hooks.add(createThroughputHook(metrics, name));
-            } else if (metric.equals(Constants.METRIC_TUPLE_COUNTER)) {
-                if (component instanceof Source) {
-                    hooks.add(createTupleCounterSourceHook(metrics, name));
-                } else {
-                    hooks.add(createTupleCounterHook(metrics, name));
-                }
-            } else if (metric.equals(Constants.METRIC_TUPLE_SIZE)) {
-                hooks.add(createTupleSizeHook(metrics, name));
+            switch ( metric ) {
+                case Constants.METRIC_PROCESS_TIME:
+                    hooks.add( createProcessTimeHook( metrics, name ) );
+                    break;
+                case Constants.METRIC_THROUGHPUT:
+                    hooks.add( createThroughputHook( metrics, name ) );
+                    break;
+                case Constants.METRIC_TUPLE_COUNTER:
+                    if ( component instanceof Source ) {
+                        hooks.add( createTupleCounterSourceHook( metrics, name ) );
+                    } else {
+                        hooks.add( createTupleCounterHook( metrics, name ) );
+                    }
+                    break;
+                case Constants.METRIC_TUPLE_SIZE:
+                    hooks.add( createTupleSizeHook( metrics, name ) );
+                    break;
             }
             
             if (component instanceof Sink) {

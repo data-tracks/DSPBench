@@ -77,12 +77,7 @@ public class FileSource extends BaseSource {
             files[0] = dir;
         }
         
-        Arrays.sort(files, new Comparator<File>() {
-            public int compare(File f1, File f2) {
-                int res = f1.lastModified() < f2.lastModified() ? -1 : ( f1.lastModified() > f2.lastModified() ? 1 : 0);
-                return res;
-            }
-        });
+        Arrays.sort(files, Comparator.comparingLong( File::lastModified ) );
         
         for (File f : files) {
             totalBytes += f.length();
@@ -114,7 +109,7 @@ public class FileSource extends BaseSource {
                 }
             }
         } catch (IOException ex) {
-            LOG.error("Error while reading file " + files[curFileIndex].getName(), ex);
+            LOG.error( "Error while reading file {}", files[curFileIndex].getName(), ex );
         }
     }
     

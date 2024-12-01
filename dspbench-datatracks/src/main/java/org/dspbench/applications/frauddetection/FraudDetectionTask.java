@@ -58,10 +58,6 @@ public class FraudDetectionTask extends BasicTask {
         builder.groupByKey(FraudDetectionConstants.Component.SINK, predictions);
     }
 
-    @Override
-    public Logger getLogger() {
-        return LOG;
-    }
 
     @Override
     public String getConfigPrefix() {

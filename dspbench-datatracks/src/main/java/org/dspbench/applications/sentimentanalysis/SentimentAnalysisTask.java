@@ -44,11 +44,6 @@ public class SentimentAnalysisTask extends BasicTask {
     }
 
     @Override
-    public Logger getLogger() {
-        return LOG;
-    }
-
-    @Override
     public String getConfigPrefix() {
         return SentimentAnalysisConstants.PREFIX;
     }

@@ -67,11 +67,6 @@ public class TrendingTopicsTask extends BasicTask {
     }
 
     @Override
-    public Logger getLogger() {
-        return LOG;
-    }
-
-    @Override
     public String getConfigPrefix() {
         return TrendingTopicsConstants.PREFIX;
     }

@@ -1,6 +1,8 @@
 package org.dspbench.topology.impl;
 
 import com.codahale.metrics.MetricRegistry;
+import lombok.Getter;
+import lombok.Setter;
 import org.dspbench.core.Source;
 import org.dspbench.core.hook.Hook;
 import org.dspbench.core.hook.StreamRateHook;
@@ -19,11 +21,13 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalSourceAdapter implements ISourceAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(LocalSourceAdapter.class);
-    private MetricRegistry metrics;   
+    @Setter
+    private MetricRegistry metrics;
     private Configuration config;
     private Source source;
+    @Getter
     private List<LocalSourceInstance> instances;
-    private List<Hook> hooks = new ArrayList<Hook>();
+    private final List<Hook> hooks = new ArrayList<Hook>();
 
     public void setComponent(Source source) {
         this.source = source;
@@ -37,16 +41,13 @@ public class LocalSourceAdapter implements ISourceAdapter {
         hooks.add(new StreamRateHook(rate));
     }
 
-    public void setMetrics(MetricRegistry metrics) {
-        this.metrics = metrics;
-    }
 
     public void setConfiguration(Configuration config) {
         this.config = config;
     }
     
     public void setupInstances() {
-        instances = new ArrayList<LocalSourceInstance>();
+        instances = new ArrayList<>();
         
         for (int p=0; p<source.getParallelism(); p++) {
             Source component = (Source) source.copy();
@@ -66,10 +67,7 @@ public class LocalSourceAdapter implements ISourceAdapter {
             instances.add(p, instance);
         }
     }
-    
-    public List<LocalSourceInstance> getInstances() {
-        return instances;
-    }
+
 
     public void addComponentHook(Hook hook) {
         hooks.add(hook);

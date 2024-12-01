@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @param <T>
  */
 public interface IComponentAdapter<T extends Component> extends Serializable {
-    public void setComponent(T operator);
-    public T getComponent();
-    public void addComponentHook(Hook hook);
+    void setComponent( T operator );
+    T getComponent();
+    void addComponentHook( Hook hook );
 }

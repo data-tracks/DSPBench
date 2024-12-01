@@ -20,12 +20,8 @@ public class WordCountOperator extends BaseOperator {
     
     public void process(Tuple tuple) {
         String word = tuple.getString(WordCountConstants.Field.WORD);
-        MutableLong count = counts.get(word);
-        
-        if (count == null) {
-            count = new MutableLong(0);
-            counts.put(word, count);
-        }
+        MutableLong count = counts.computeIfAbsent( word, k -> new MutableLong( 0 ) );
+
         count.increment();
                         
         emit(tuple, new Values(word, count.longValue()));
