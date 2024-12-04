@@ -3,6 +3,9 @@ package org.dspbench.base.source;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.WebSocket;
 import org.dspbench.core.Values;
 import org.dspbench.base.constants.BaseConstants.BaseConfig;
 import org.dspbench.base.source.parser.Parser;
@@ -24,7 +27,10 @@ import org.slf4j.LoggerFactory;
 
 public class FileSource extends BaseSource {
     private static final Logger LOG = LoggerFactory.getLogger(FileSource.class);
-        
+
+    WebSocket webSocket;
+    String url;
+
     private Parser parser;
     private File[] files;
     private File currFile;
@@ -36,6 +42,15 @@ public class FileSource extends BaseSource {
     private Counter readBytes;
     private Counter msgCount;
     private Progress progress;
+
+    public FileSource(String url) {
+        this.url = url;
+    }
+
+    public FileSource(){
+
+    }
+
     
     public void initialize() {
         String parserClass = config.getString(getConfigKey(BaseConfig.SOURCE_PARSER));
@@ -50,6 +65,21 @@ public class FileSource extends BaseSource {
             msgCount  = metrics.counter(prefix + ".messages");
             progress = metrics.register(prefix + ".progress", new Progress());
         }
+
+        HttpClient client = HttpClient.newHttpClient();
+        webSocket = client.newWebSocketBuilder()
+                .buildAsync(URI.create( "ws://localhost:3666/ws" ), new WebSocket.Listener() {
+                    @Override
+                    public void onOpen(WebSocket webSocket) {
+                        System.out.println("WebSocket connected.");
+                    }
+
+                    @Override
+                    public void onError(WebSocket webSocket, Throwable error) {
+                        System.err.println("WebSocket error: " + error.getMessage());
+                    }
+
+                }).join();
         
         buildIndex();
         openNextFile();
@@ -102,7 +132,7 @@ public class FileSource extends BaseSource {
 
             if (tuples != null) {
                 for (Values values : tuples) {
-                    emit(values.getStreamId(), values);
+                    publish(values);
                     if (msgCount != null) {
                         msgCount.inc();
                     }
@@ -112,7 +142,13 @@ public class FileSource extends BaseSource {
             LOG.error( "Error while reading file {}", files[curFileIndex].getName(), ex );
         }
     }
-    
+
+
+    private void publish( Values values ) {
+        webSocket.sendText( values.get( 0 ).toString(), true );
+    }
+
+
     @Override
     public boolean hasNext() {
         return !finished;

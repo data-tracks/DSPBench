@@ -39,8 +39,10 @@ public class MetricsFactory {
     public static MetricRegistry createRegistry(Configuration config) {
         MetricsFactory.config = config;
         
-        if (!config.getBoolean(Configuration.METRICS_ENABLED, false))
+        if (!config.getBoolean(Configuration.METRICS_ENABLED, false)){
             return null;
+        }
+
         
         MetricRegistry metrics = new MetricRegistry();
         

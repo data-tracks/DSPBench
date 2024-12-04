@@ -1,5 +1,6 @@
 package org.dspbench.core;
 
+import lombok.Getter;
 import org.dspbench.partitioning.Fields;
 import org.dspbench.partitioning.PartitioningScheme;
 import org.dspbench.topology.IOperatorAdapter;
@@ -17,6 +18,7 @@ public abstract class Stream implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(Stream.class);
     
     protected String id;
+    @Getter
     protected Schema schema;
     
     public Stream(String id, Schema schema) {
@@ -28,9 +30,6 @@ public abstract class Stream implements Serializable {
         return id;
     }
 
-    public Schema getSchema() {
-        return schema;
-    }
 
     public void put(Component component, Values values) {
         put(component, createTuple(component, null, values));

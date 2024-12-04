@@ -12,7 +12,7 @@ public class ConsoleSink extends BaseSink {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleSink.class);
     
     public void process(Tuple tuple) {
-        System.out.println(formatter.format(tuple) + "hi");
+        System.out.println(formatter.format(tuple));
     }
 
     @Override
