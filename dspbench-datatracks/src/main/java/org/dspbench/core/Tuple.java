@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 
@@ -18,13 +20,25 @@ import java.util.Map;
 public class Tuple implements Serializable {
     private static final long serialVersionUID = -5139144941369700193L;
     
+    @Setter
+    @Getter
     protected long id;
+    @Getter
     protected long lineageBirth;
+    @Getter
     protected long createdAt;
+    @Setter
+    @Getter
     protected String componentName;
+    @Setter
+    @Getter
     protected int componentId;
+    @Setter
+    @Getter
     protected String streamId;
     
+    @Setter
+    @Getter
     protected transient Object tempValue;
     
     protected Map<String, Serializable> map;
@@ -34,12 +48,12 @@ public class Tuple implements Serializable {
     }
     
     public Tuple(Tuple parent) {
-        map          = new HashMap<String, Serializable>();
+        map          = new HashMap<>();
         createdAt    = System.currentTimeMillis();
         lineageBirth = (parent != null) ? parent.lineageBirth : createdAt;
     }
 
-    protected Tuple(long id, int componentId, String componentName, String streamId,
+    public Tuple(long id, int componentId, String componentName, String streamId,
             long lineageBirth, long createdAt, Map<String, Serializable> map) {
         this.id= id;
         this.lineageBirth = lineageBirth;
@@ -104,54 +118,7 @@ public class Tuple implements Serializable {
         return map;
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
-    }
-
-    public int getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(int componentId) {
-        this.componentId = componentId;
-    }
-
-    public String getStreamId() {
-        return streamId;
-    }
-
-    public void setStreamId(String streamId) {
-        this.streamId = streamId;
-    }
-
-    public long getLineageBirth() {
-        return lineageBirth;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Object getTempValue() {
-        return tempValue;
-    }
-
-    public void setTempValue(Object platformTuple) {
-        this.tempValue = platformTuple;
-    }
-    
     @Override
     public String toString() {
         return "Tuple{" + "id=" + id + ", lineageBirth=" + lineageBirth 

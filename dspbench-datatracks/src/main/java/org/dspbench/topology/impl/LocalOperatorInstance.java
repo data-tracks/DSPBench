@@ -1,6 +1,17 @@
 package org.dspbench.topology.impl;
 
+import java.io.Serializable;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.WebSocket;
+import java.net.http.WebSocket.Listener;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletionStage;
+import lombok.Getter;
 import org.dspbench.core.Operator;
+import org.dspbench.core.Task;
 import org.dspbench.core.Tuple;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -10,7 +21,9 @@ import org.slf4j.LoggerFactory;
 
 public class LocalOperatorInstance {
     private static final Logger LOG = LoggerFactory.getLogger(LocalOperatorInstance.class);
+    @Getter
     private final Operator operator;
+    @Getter
     private final int index;
     private final BlockingQueue<Tuple> buffer;
 
@@ -18,16 +31,9 @@ public class LocalOperatorInstance {
         this.operator = operator;
         this.index = index;
 
-        buffer = new LinkedBlockingQueue<Tuple>();
+        buffer = new LinkedBlockingQueue<>();
     }
 
-    public Operator getOperator() {
-        return operator;
-    }
-
-    public int getIndex() {
-        return index;
-    }
 
     public void processTuple(Tuple tuple) {
         try {
@@ -37,16 +43,46 @@ public class LocalOperatorInstance {
         }
     }
 
-    public Runnable getProcessRunner() {
-        return processRunner;
-    }
 
-    public Runnable getTimeRunner() {
-        return timeRunner;
-    }
-    
+    @Getter
     private final Runnable processRunner = new Runnable() {
         public void run() {
+            HttpClient client = HttpClient.newHttpClient();
+            client.newWebSocketBuilder()
+                    .buildAsync( URI.create( "ws://localhost:4666/ws" ), new Listener() {
+                        @Override
+                        public void onOpen( WebSocket webSocket ) {
+                            System.out.println( "WebSocket connected." );
+                            webSocket.request(1);
+                        }
+
+
+                        @Override
+                        public CompletionStage<?> onText( WebSocket webSocket, CharSequence data, boolean last ) {
+                            Map<String, Serializable> map = new HashMap<>();
+                            map.put("data", data.toString());
+
+                            Tuple tuple = new Tuple(0, 0, null, null,0,0, map );
+                            buffer.add( tuple );
+                            webSocket.request(1);
+                            return null;
+                        }
+
+
+                        @Override
+                        public CompletionStage<?> onBinary( WebSocket webSocket, ByteBuffer data, boolean last ) {
+                            webSocket.request(1);
+                            return Listener.super.onBinary( webSocket, data, last );
+                        }
+
+
+                        @Override
+                        public void onError( WebSocket webSocket, Throwable error ) {
+                            System.err.println( "WebSocket error: " + error.getMessage() );
+                        }
+
+
+                    } ).join();
             while (true) {
                 try {
                     Tuple tuple = buffer.take();
@@ -65,6 +101,7 @@ public class LocalOperatorInstance {
         }
     };
     
+    @Getter
     private final Runnable timeRunner = new Runnable() {
         public void run() {
             synchronized (operator) {

@@ -1,5 +1,6 @@
 package org.dspbench.base.sink;
 
+import java.nio.charset.StandardCharsets;
 import org.dspbench.base.constants.BaseConstants.BaseConfig;
 import org.dspbench.core.Tuple;
 import org.dspbench.utils.JavaUtils;
@@ -33,7 +34,7 @@ public class FileSink extends BaseSink {
         try {
             encoding = Charset.forName(getConfigKey(BaseConfig.SINK_ENCODING));
         } catch (Exception ex) {
-            encoding = Charset.forName("UTF-8");
+            encoding = StandardCharsets.UTF_8;
         }
         
         Map<String, Object> map = new HashMap<String, Object>(2);

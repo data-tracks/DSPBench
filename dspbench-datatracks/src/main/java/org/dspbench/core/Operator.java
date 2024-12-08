@@ -1,5 +1,6 @@
 package org.dspbench.core;
 
+import lombok.Getter;
 import org.dspbench.utils.Configuration;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.List;
  *
  * @author Maycon Viana Bordin <mayconbordin@gmail.com>
  */
+@Getter
 public abstract class Operator extends Component {
-    private List<Stream> inputStreams = new ArrayList<Stream>();
+    private final List<Stream> inputStreams = new ArrayList<Stream>();
     
     @Override
     public void onCreate(int id, Configuration config) {
@@ -28,7 +30,4 @@ public abstract class Operator extends Component {
         inputStreams.add(stream);
     }
 
-    public List<Stream> getInputStreams() {
-        return inputStreams;
-    }
 }

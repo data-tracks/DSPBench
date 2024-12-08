@@ -51,6 +51,10 @@ dependencies {
     implementation 'com.maxmind.geoip2:geoip2:2.15.0'
     implementation 'com.carrotsearch:java-sizeof:0.0.5'
 
+    // eclipse EPL 2.0
+    implementation group: 'jakarta.websocket', name: 'jakarta.websocket-all', version: '2.2.0', ext: 'pom'
+    compileOnly group: 'jakarta.websocket', name: 'jakarta.websocket-api', version: '2.2.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
