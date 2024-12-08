@@ -45,7 +45,7 @@ public class StormRunner {
     private static final Logger LOG = LoggerFactory.getLogger(StormRunner.class);
     private static final String RUN_LOCAL  = "local";
     private static final String RUN_REMOTE = "remote";
-    private static final String CFG_PATH = "/config/%s.properties";
+    private static final String CFG_PATH = "%s.properties";
     
     @Parameter
     public List<String> parameters = Lists.newArrayList();
@@ -95,7 +95,10 @@ public class StormRunner {
             // load default configuration
             if (configStr == null) {
                 String cfg = String.format(CFG_PATH, application);
+                LOG.warn("Loading configuration from {}", cfg);
                 Properties p = loadProperties(cfg, (configStr == null));
+
+                LOG.warn("Loading configuration from {}, {}", cfg, p);
             
                 config = Configuration.fromProperties(p);
                 LOG.info("Loaded default configuration file {}", cfg);
@@ -176,7 +179,7 @@ public class StormRunner {
         LOG.info("Topology {} finished", topologyName);
         
         cluster.shutdown();
-        LOG.info("Local Storm cluster was shutdown", topologyName);
+        LOG.info("Local Storm cluster {} was shutdown", topologyName);
     }
 
     /**
@@ -184,8 +187,6 @@ public class StormRunner {
      * @param topology The topology to be executed
      * @param topologyName The name of the topology
      * @param conf The configurations for the execution
-     * @throws AlreadyAliveException
-     * @throws InvalidTopologyException 
      */
     public static void runTopologyRemotely(StormTopology topology, String topologyName,
             Config conf) throws Exception {
@@ -196,9 +197,10 @@ public class StormRunner {
         Properties properties = new Properties();
         InputStream is;
         
-        if (classpath) {
+        if (false) {
             is = StormRunner.class.getResourceAsStream(filename);
         } else {
+            LOG.warn( "path {}", filename );
             is = new FileInputStream(filename);
         }
         

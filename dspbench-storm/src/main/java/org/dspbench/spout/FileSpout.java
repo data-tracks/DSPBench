@@ -61,7 +61,7 @@ public class FileSpout extends AbstractSpout {
         File dir = new File(path);
         if (!dir.exists()) {
             LOG.error("The source path {} does not exists", path);
-            throw new RuntimeException("The source path '" + path + "' does not exists in " + dir.getAbsolutePath() +" it exists " + Arrays.toString(new File(".").listFiles()) + " bsolute " + new File(".").getAbsolutePath());
+            throw new RuntimeException("The source path '" + path + "' does not exists in " + dir.getAbsolutePath() +" it exists " + Arrays.toString(new File("/").listFiles()) + " bsolute " + new File(".").getAbsolutePath());
         }
         
         if (dir.isDirectory()) {
@@ -70,14 +70,9 @@ public class FileSpout extends AbstractSpout {
             files = new File[1];
             files[0] = dir;
         }
+        files = Arrays.stream( files ).filter( File::isFile ).filter( file -> file.getName().endsWith( ".dat" ) ).toArray( File[]::new);
         
-        Arrays.sort(files, new Comparator<File>() {
-            @Override
-            public int compare(File f1, File f2) {
-                int res = f1.lastModified() < f2.lastModified() ? -1 : ( f1.lastModified() > f2.lastModified() ? 1 : 0);
-                return res;
-            }
-        });
+        Arrays.sort(files, Comparator.comparingLong( File::lastModified ) );
         
         LOG.info("Number of files to read: {}", files.length);
     }

@@ -47,11 +47,12 @@ public class TaskRunner {
         LOG.info("Loaded configuration string into = " + configuration);
     }
     
-    protected Configuration createConfiguration(String configStr) {
-        if (configStr == null)
+    protected Configuration createConfiguration(String path) {
+        if (path == null) {
             return new Configuration();
-        else
-            return Configuration.fromStr(configStr);
+        }else {
+            return Configuration.fromProperties( path );
+        }
     }
     
     public void start(ComponentFactory factory) {
