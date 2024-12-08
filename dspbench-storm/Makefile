@@ -75,7 +75,7 @@ run-docker:
 	fi
 
 	@if [ $(APP) = "wordcount" ]; then\
-		docker run -it ${IMAGENAME} wordcount /app/config/word-count.properties;\
+		docker run -it ${IMAGENAME} wordcount /app/config/wordcount.properties;\
 	fi
 
 	@if [ $(APP) = "smartgrid" ]; then\

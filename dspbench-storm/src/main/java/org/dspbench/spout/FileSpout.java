@@ -61,7 +61,7 @@ public class FileSpout extends AbstractSpout {
         File dir = new File(path);
         if (!dir.exists()) {
             LOG.error("The source path {} does not exists", path);
-            throw new RuntimeException("The source path '" + path + "' does not exists");
+            throw new RuntimeException("The source path '" + path + "' does not exists in " + dir.getAbsolutePath() +" it exists " + Arrays.toString(new File(".").listFiles()) + " bsolute " + new File(".").getAbsolutePath());
         }
         
         if (dir.isDirectory()) {
