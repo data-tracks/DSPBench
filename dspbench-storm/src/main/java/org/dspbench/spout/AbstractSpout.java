@@ -185,7 +185,6 @@ public abstract class AbstractSpout extends BaseRichSpout {
     }
 
     public void receiveThroughput() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
             long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
@@ -196,11 +195,9 @@ public abstract class AbstractSpout extends BaseRichSpout {
 
             rec = (rec == null) ? 1L : ++rec;
             received.put(unixTime + "", rec);
-        }
     }
 
     public void emittedThroughput() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
             long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
@@ -211,12 +208,10 @@ public abstract class AbstractSpout extends BaseRichSpout {
 
             emit = (emit == null) ? 1L : ++emit;
             emitted.put(unixTime + "", emit);
-        }
     }
 
     public void recemitThroughput() {
-        
-        if (config.getBoolean(METRICS_ENABLED, false)) {
+
             long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
@@ -231,11 +226,10 @@ public abstract class AbstractSpout extends BaseRichSpout {
 
             emit = (emit == null) ? 1L : ++emit;
             emitted.put(unixTime + "", emit);
-        }
     }
 
     public void SaveMetrics() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
+
             new Thread(() -> {
                 try {
                     try (Writer writer = new FileWriter(this.fileReceived, true)) {
@@ -263,6 +257,5 @@ public abstract class AbstractSpout extends BaseRichSpout {
                     }
                 }
             }).start();
-        }
     }
 }

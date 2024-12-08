@@ -165,19 +165,17 @@ public abstract class AbstractBolt extends BaseRichBolt {
         this.config = Configuration.fromMap(stormConf);
         this.context = context;
         this.collector = collector;
-        if (config.getBoolean(METRICS_ENABLED, false)) {
             File pathTrh = Paths.get(config.getString(Configuration.METRICS_OUTPUT)).toFile();
 
             pathTrh.mkdirs();
             this.fileReceived = Paths.get(config.getString(Configuration.METRICS_OUTPUT, "/home/IDK"), this.getClass().getSimpleName() + "-received.csv").toFile();
             this.fileEmitted = Paths.get(config.getString(Configuration.METRICS_OUTPUT, "/home/IDK"), this.getClass().getSimpleName() + "-emitted.csv").toFile();
-        }
+
         initialize();
     }
 
     public void receiveThroughput() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
-            long unixTime = 0;
+          long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
             } else {
@@ -187,11 +185,10 @@ public abstract class AbstractBolt extends BaseRichBolt {
 
             rec = (rec == null) ? 1L : ++rec;
             received.put(unixTime + "", rec);
-        }
+
     }
 
     public void emittedThroughput() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
             long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
@@ -202,12 +199,11 @@ public abstract class AbstractBolt extends BaseRichBolt {
 
             emit = (emit == null) ? 1L : ++emit;
             emitted.put(unixTime + "", emit);
-        }
+
     }
 
     public void recemitThroughput() {
-        
-        if (config.getBoolean(METRICS_ENABLED, false)) {
+
             long unixTime = 0;
             if (config.getString(METRICS_INTERVAL_UNIT, "seconds").equals("seconds")) {
                 unixTime = Instant.now().getEpochSecond();
@@ -222,16 +218,15 @@ public abstract class AbstractBolt extends BaseRichBolt {
 
             emit = (emit == null) ? 1L : ++emit;
             emitted.put(unixTime + "", emit);
-        }
     }
 
     public void SaveMetrics() {
-        if (config.getBoolean(METRICS_ENABLED, false)) {
+
             new Thread(() -> {
                 try {
                     try (Writer writer = new FileWriter(this.fileReceived, true)) {
                         for (Map.Entry<String, Long> entry : this.received.entrySet()) {
-                            writer.append(entry.getKey() + "," + entry.getValue() + System.getProperty("line.separator"));
+                            writer.append( entry.getKey() ).append( "," ).append( String.valueOf( entry.getValue() ) ).append( System.lineSeparator() );
                         }
                         
                     } catch (IOException ex) {
@@ -244,7 +239,7 @@ public abstract class AbstractBolt extends BaseRichBolt {
                     try {
                         try (Writer writer = new FileWriter(this.fileEmitted, true)) {
                             for (Map.Entry<String, Long> entry : this.emitted.entrySet()) {
-                                writer.append(entry.getKey() + "," + entry.getValue() + System.getProperty("line.separator"));
+                                writer.append( entry.getKey() ).append( "," ).append( String.valueOf( entry.getValue() ) ).append( System.lineSeparator() );
                             }
                         } catch (IOException ex) {
                             System.out.println("Error while writing the file " + fileEmitted + " - " + ex);
@@ -254,7 +249,7 @@ public abstract class AbstractBolt extends BaseRichBolt {
                     }
                 }
             }).start();
-        }
+
     }
 
     public void initialize() {

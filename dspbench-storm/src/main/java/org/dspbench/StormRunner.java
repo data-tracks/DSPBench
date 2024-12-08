@@ -164,7 +164,6 @@ public class StormRunner {
      * @param topologyName The name of the topology
      * @param conf The configurations for the execution
      * @param runtimeInSeconds For how much time the topology will run
-     * @throws InterruptedException 
      */
     public static void runTopologyLocally(StormTopology topology, String topologyName,
             Config conf, int runtimeInSeconds) throws Exception {

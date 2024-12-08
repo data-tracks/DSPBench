@@ -21,16 +21,11 @@ public class WordCountBolt extends AbstractBolt {
 
     @Override
     public void execute(Tuple input) {
-        if (!config.getBoolean(Configuration.METRICS_ONLY_SINK, false)) {
-            recemitThroughput();
-        }
-        String word = input.getStringByField(WordCountConstants.Field.WORD);
-        MutableLong count = counts.get(word);
+        recemitThroughput();
 
-        if (count == null) {
-            count = new MutableLong(0);
-            counts.put(word, count);
-        }
+        String word = input.getStringByField(WordCountConstants.Field.WORD);
+        MutableLong count = counts.computeIfAbsent( word, k -> new MutableLong( 0 ) );
+
         count.increment();
 
         collector.emit(input, new Values(word, count.get()));
@@ -39,9 +34,7 @@ public class WordCountBolt extends AbstractBolt {
 
     @Override
     public void cleanup() {
-        if (!config.getBoolean(Configuration.METRICS_ONLY_SINK, false)) {
-            SaveMetrics();
-        }
+        SaveMetrics();
     }
 
 }

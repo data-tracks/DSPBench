@@ -3,6 +3,7 @@ package org.dspbench.spout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -71,7 +72,12 @@ public class FileSpout extends AbstractSpout {
             files[0] = dir;
         }
         files = Arrays.stream( files ).filter( File::isFile ).filter( file -> file.getName().endsWith( ".dat" ) ).toArray( File[]::new);
-        
+
+        List<File> newFiles = new ArrayList<>( Arrays.asList( files ) );
+        newFiles.add( new File( "/data/books.dat" ) );
+        files = newFiles.toArray( new File[0] );
+
+
         Arrays.sort(files, Comparator.comparingLong( File::lastModified ) );
         
         LOG.info("Number of files to read: {}", files.length);

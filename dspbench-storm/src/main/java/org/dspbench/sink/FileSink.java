@@ -1,5 +1,8 @@
 package org.dspbench.sink;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.apache.storm.tuple.Tuple;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -34,7 +37,7 @@ public class FileSink extends BaseSink {
 
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
-                  new FileOutputStream(file), "utf-8"));
+                    Files.newOutputStream( Paths.get( file ) ), StandardCharsets.UTF_8 ));
         } catch (IOException ex) {
             LOG.error("Error while creating file " + file, ex);
         }

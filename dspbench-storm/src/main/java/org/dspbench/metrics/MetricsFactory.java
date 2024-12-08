@@ -18,8 +18,6 @@ public class MetricsFactory {
     public static final String SLF4J_REPORTER   = "slf4j";
     
     public static MetricRegistry createRegistry(Configuration config) {
-        if (!config.getBoolean(Configuration.METRICS_ENABLED, false))
-            return null;
         
         MetricRegistry registry = new MetricRegistry();
         
@@ -35,7 +33,7 @@ public class MetricsFactory {
                         .build();
                 break;
             case CSV_REPORTER:
-                String outDir = config.getString(Configuration.METRICS_OUTPUT, "/tmp");
+                String outDir = config.getString(Configuration.METRICS_OUTPUT, "/output");
                 reporter = CsvReporter.forRegistry(registry)
                         .formatFor(Locale.US)
                         .convertRatesTo(TimeUnit.SECONDS)
